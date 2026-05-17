@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { useId, useMemo, useState } from 'react'
+import { useCallback, useId, useMemo, useState } from 'react'
 import { Sparkles, TrendingDown, TrendingUp } from 'lucide-react'
 import { useLocale } from '../../../i18n/LocaleContext'
 import { channelLeaderboard, demandSeries, demandLabels, pricingKpis } from '../../../lib/mock/pricing'
@@ -9,7 +9,7 @@ import { KpiCard } from '../../ui/KpiCard'
 import { SimulationButton } from '../../ui/SimulationButton'
 
 export function PricingDashboard() {
-  const { t } = useLocale()
+  const { t, formatUsd, formatCpmUsd } = useLocale()
   const [applied, setApplied] = useState(false)
   const [toast, setToast] = useState(false)
 
@@ -29,6 +29,14 @@ export function PricingDashboard() {
     )
     return [...boosted].sort((a, b) => b.cpm - a.cpm)
   }, [applied])
+
+  const aiInsightInterpolate = useMemo(() => {
+    const impact72 = '+' + formatUsd(72, { thousands: true, style: 'compact' })
+    return t('modules.pricing.pages.dashboard.aiInsightBody').replace('{impact}', impact72)
+  }, [formatUsd, t])
+
+  const animateCpm = useCallback((n: number) => formatCpmUsd(n, { style: 'standard', maxFractionDigits: 2, minFractionDigits: 2 }), [formatCpmUsd])
+  const animateRevLift = useCallback((n: number) => formatUsd(n, { millions: true, style: 'compact' }), [formatUsd])
 
   const runApply = async () => {
     await new Promise((r) => setTimeout(r, 1100))
@@ -62,11 +70,7 @@ export function PricingDashboard() {
                   key={k.label}
                   label={label}
                   value={
-                    <AnimatedNumber
-                      value={applied ? 27.6 : 24.8}
-                      decimals={2}
-                      format={(n) => `$${n.toFixed(2)}`}
-                    />
+                    <AnimatedNumber value={applied ? 27.6 : 24.8} decimals={2} format={animateCpm} />
                   }
                   delta={applied ? 10.2 : k.delta}
                   sparkline={k.sparkline}
@@ -79,11 +83,7 @@ export function PricingDashboard() {
                   key={k.label}
                   label={label}
                   value={
-                    <AnimatedNumber
-                      value={applied ? 1.58 : 1.42}
-                      decimals={2}
-                      format={(n) => `$${n.toFixed(2)}M`}
-                    />
+                    <AnimatedNumber value={applied ? 1.58 : 1.42} decimals={2} format={animateRevLift} />
                   }
                   delta={applied ? 16.2 : k.delta}
                   sparkline={k.sparkline}
@@ -123,9 +123,7 @@ export function PricingDashboard() {
             <div className="text-[10px] uppercase tracking-[0.14em] text-white/55 font-semibold">
               {t('modules.pricing.pages.dashboard.aiInsight')}
             </div>
-            <p className="text-[12.5px] mt-0.5 leading-snug">
-              {t('modules.pricing.pages.dashboard.aiInsightBody')}
-            </p>
+            <p className="text-[12.5px] mt-0.5 leading-snug">{aiInsightInterpolate}</p>
           </div>
           <SimulationButton
             label={t('action.applyAiRecommendation')}
@@ -164,7 +162,7 @@ export function PricingDashboard() {
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <span className="flex-1 text-[12px] font-semibold text-[#0a1b33]">{c.channel}</span>
-                <span className="text-[12px] font-semibold text-[#0a1b33] tabular-nums">${c.cpm.toFixed(1)}</span>
+                <span className="text-[12px] font-semibold text-[#0a1b33] tabular-nums">{formatCpmUsd(c.cpm)}</span>
                 <span
                   className={cn(
                     'inline-flex items-center gap-1 text-[10px] font-semibold rounded-full px-1.5 py-0.5',

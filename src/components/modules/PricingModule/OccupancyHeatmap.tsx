@@ -1,10 +1,21 @@
+import { useMemo } from 'react'
 import { HeatmapGrid } from '../../ui/HeatmapGrid'
 import { occupancyCells } from '../../../lib/mock/pricing'
+import { useLocale } from '../../../i18n/LocaleContext'
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 const hours = ['00', '04', '08', '12', '16', '20']
 
 export function OccupancyHeatmap() {
+  const { formatUsd, formatCpmUsd, t } = useLocale()
+
+  const projectedCpm = formatCpmUsd(31.8)
+
+  const nudge = useMemo(() => {
+    const gain = '+' + formatUsd(8.4, { thousands: true, style: 'compact' })
+    return t('modules.pricing.pages.heatmap.aiNudge').replace('{gain}', gain)
+  }, [formatUsd, t])
+
   return (
     <div className="grid lg:grid-cols-[1fr_280px] gap-5">
       <div className="rounded-2xl bg-white/85 backdrop-blur-2xl border border-slate-200/60 p-6 shadow-[0_18px_40px_-22px_rgba(15,23,42,0.18)]">
@@ -66,15 +77,13 @@ export function OccupancyHeatmap() {
           <Stat label="Sold" value="11 (78%)" />
           <Stat label="Active campaigns" value="Aurora, BankX, Perta" />
           <Stat label="Open slots" value="3" />
-          <Stat label="Projected CPM" value="$31.80" />
+          <Stat label="Projected CPM" value={projectedCpm} />
         </div>
         <div className="mt-5 rounded-xl bg-[#0a152d] text-white p-4">
           <div className="text-[10px] uppercase tracking-[0.14em] text-white/60 font-semibold">
             AI nudge
           </div>
-          <p className="text-[11.5px] mt-1 leading-snug">
-            Raise prime CPM +5% for next Thu — projects +$8.4k with 92% confidence.
-          </p>
+          <p className="text-[11.5px] mt-1 leading-snug">{nudge}</p>
         </div>
       </aside>
     </div>

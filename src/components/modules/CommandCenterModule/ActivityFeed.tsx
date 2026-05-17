@@ -1,4 +1,5 @@
 import { Activity, Banknote, CheckCircle2, FileText, Film, Sparkles } from 'lucide-react'
+import { useLocale } from '../../../i18n/LocaleContext'
 import { activityFeed } from '../../../lib/mock/commandCenter'
 
 const iconMap = {
@@ -10,6 +11,7 @@ const iconMap = {
 } as const
 
 export function ActivityFeed() {
+  const { formatUsd } = useLocale()
   return (
     <div className="rounded-2xl bg-white/85 backdrop-blur-2xl border border-slate-200/60 p-6 shadow-[0_18px_40px_-22px_rgba(15,23,42,0.18)]">
       <div className="flex items-center justify-between">
@@ -35,6 +37,18 @@ export function ActivityFeed() {
         {activityFeed.map((e) => {
           const m = iconMap[e.type]
           const Icon = m.icon
+          const target =
+            e.targetUsdThousands !== undefined ? (
+              <>
+                <span className="font-semibold">{e.target}</span>
+                <span className="font-semibold">
+                  {' '}
+                  · {formatUsd(e.targetUsdThousands, { thousands: true, style: 'compact' })}
+                </span>
+              </>
+            ) : (
+              <span className="font-semibold">{e.target}</span>
+            )
           return (
             <li key={e.id} className="relative pl-10 pb-4 last:pb-0">
               <span
@@ -45,8 +59,7 @@ export function ActivityFeed() {
               <div className="rounded-xl bg-white border border-slate-100 px-4 py-2.5 shadow-[0_8px_22px_-14px_rgba(15,23,42,0.12)]">
                 <div className="flex items-center justify-between">
                   <div className="text-[12px] text-[#0a1b33]">
-                    <span className="font-semibold">{e.actor}</span> {e.action}{' '}
-                    <span className="font-semibold">{e.target}</span>
+                    <span className="font-semibold">{e.actor}</span> {e.action} {target}
                   </div>
                   <span className="text-[10.5px] text-slate-400 font-semibold tabular-nums">
                     {e.time}

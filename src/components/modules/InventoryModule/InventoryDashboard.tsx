@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Layers, Sparkles, Zap } from 'lucide-react'
 import { HeatmapGrid } from '../../ui/HeatmapGrid'
 import { KpiCard } from '../../ui/KpiCard'
+import { useLocale } from '../../../i18n/LocaleContext'
 import { inventoryCells, inventoryKpis, openSlots } from '../../../lib/mock/inventory'
 import { cn } from '../../../lib/cn'
 
@@ -10,6 +11,17 @@ const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 export function InventoryDashboard() {
   const [active, setActive] = useState('Metro One')
+  const { formatUsd, formatCpmUsd } = useLocale()
+
+  const kpiValues = useMemo(
+    () =>
+      inventoryKpis.map((k) =>
+        'riskUsdThousands' in k && typeof (k as { riskUsdThousands?: number }).riskUsdThousands === 'number'
+          ? formatUsd((k as { riskUsdThousands: number }).riskUsdThousands, { thousands: true, style: 'compact' })
+          : (k as { value?: string }).value ?? '',
+      ),
+    [formatUsd],
+  )
 
   return (
     <div className="space-y-5">
@@ -35,8 +47,8 @@ export function InventoryDashboard() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {inventoryKpis.map((k) => (
-          <KpiCard key={k.label} label={k.label} value={k.value} delta={k.delta} hint={k.hint} />
+        {inventoryKpis.map((k, i) => (
+          <KpiCard key={k.label} label={k.label} value={kpiValues[i]} delta={k.delta} hint={k.hint} />
         ))}
       </div>
 
@@ -98,12 +110,12 @@ export function InventoryDashboard() {
                 <div className="flex-1">
                   <div className="text-[11.5px] font-semibold text-white">{s.channel}</div>
                   <div className="text-[10.5px] text-white/55">
-                    {s.date} · {s.daypart} · CPM ${s.cpm}
+                    {s.date} · {s.daypart} · CPM {formatCpmUsd(s.cpm)}
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="font-display text-[14px] font-medium tabular-nums">
-                    ${(s.projected / 1000).toFixed(1)}k
+                    {formatUsd(s.projected / 1000, { thousands: true, style: 'compact' })}
                   </div>
                   <div className="text-[9px] text-cyan-300 font-semibold">{s.fit}% fit</div>
                 </div>

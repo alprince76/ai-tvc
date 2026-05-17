@@ -8,18 +8,22 @@ import { SimulationButton } from '../../ui/SimulationButton'
 import { StatusBadge } from '../../ui/StatusBadge'
 
 export function PackageRecommendation() {
-  const { t, tr } = useLocale()
+  const { t, tr, formatUsd, formatCpmUsd } = useLocale()
 
   const briefRows = useMemo(
     () => [
       { icon: Building2, label: t('modules.quotation.pages.input.brand'), value: campaignBrief.brand },
       { icon: Tv2, label: t('modules.quotation.pages.input.vertical'), value: campaignBrief.vertical },
       { icon: Crosshair, label: t('modules.quotation.pages.input.kpiFocus'), value: campaignBrief.kpi },
-      { icon: Wallet, label: t('modules.quotation.pages.input.budget'), value: `$${campaignBrief.budget.toLocaleString()}` },
+      {
+        icon: Wallet,
+        label: t('modules.quotation.pages.input.budget'),
+        value: formatUsd(campaignBrief.budget),
+      },
       { icon: CalendarRange, label: t('modules.quotation.pages.input.flightEnd'), value: campaignBrief.flight },
       { icon: Users, label: t('modules.quotation.pages.input.targetDemo'), value: campaignBrief.demo },
     ],
-    [t],
+    [formatUsd, t],
   )
 
   return (
@@ -94,7 +98,7 @@ export function PackageRecommendation() {
                   </span>
                   <span className="text-slate-500">
                     {t('modules.quotation.pages.recommend.cpm')}:{' '}
-                    <span className="text-[#0a1b33] font-semibold">${p.cpm}</span>
+                    <span className="text-[#0a1b33] font-semibold">{formatCpmUsd(p.cpm)}</span>
                   </span>
                 </div>
               </div>
@@ -103,7 +107,7 @@ export function PackageRecommendation() {
                   {t('modules.quotation.pages.recommend.projectedRevenue')}
                 </div>
                 <div className="font-display text-[22px] font-medium text-[#0a1b33] tracking-tight leading-none mt-1">
-                  ${p.revenue.toLocaleString()}
+                  {formatUsd(p.revenue)}
                 </div>
                 <SimulationButton
                   label={t('modules.quotation.pages.recommend.select')}

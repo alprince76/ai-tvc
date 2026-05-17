@@ -11,7 +11,7 @@ function delay(ms: number) {
 }
 
 export function RevenueOpportunity() {
-  const { t } = useLocale()
+  const { t, formatUsd, formatCpmUsd } = useLocale()
   const sorted = [...openSlots].sort((a, b) => b.projected - a.projected)
   const baseTotal = sorted.reduce((s, x) => s + x.projected, 0)
   const [packaged, setPackaged] = useState<Set<string>>(() => new Set())
@@ -20,11 +20,11 @@ export function RevenueOpportunity() {
   const displayTotal = baseTotal + totalBoost
 
   const summary = useMemo(
-    () =>
-      t('modules.inventory.pages.opp.openSlotsSummary')
-        .replace('{count}', String(sorted.length))
-        .replace('${k}', String(Math.round(baseTotal / 1000))),
-    [t, sorted.length, baseTotal],
+    () => {
+      const amount = formatUsd(Math.round(baseTotal / 1000), { thousands: true, style: 'compact' })
+      return t('modules.inventory.pages.opp.openSlotsSummary').replace('{count}', String(sorted.length)).replace('{amount}', amount)
+    },
+    [baseTotal, formatUsd, sorted.length, t],
   )
 
   const packageOne = useCallback(async (id: string, bump: number) => {
@@ -82,12 +82,12 @@ export function RevenueOpportunity() {
                     {s.channel} · {s.date} · {s.daypart}
                   </div>
                   <div className="text-[11px] text-slate-500">
-                    CPM ${s.cpm} · fit score {s.fit}%
+                    CPM {formatCpmUsd(s.cpm)} · fit score {s.fit}%
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="font-display text-[16px] font-medium text-[#0a1b33] tabular-nums leading-none">
-                    ${s.projected.toLocaleString()}
+                    {formatUsd(s.projected)}
                   </div>
                   <div className="text-[10px] text-slate-400">{t('modules.inventory.pages.opp.projectedRevLabel')}</div>
                 </div>
@@ -119,7 +119,11 @@ export function RevenueOpportunity() {
         </div>
         <DonutGauge value={72} size={120} thickness={10} variant="emerald" />
         <div className="font-display text-[26px] font-medium mt-3 tabular-nums">
-          $<AnimatedNumber value={displayTotal / 1000} decimals={0} format={(n) => `${Math.round(n)}k`} />
+          <AnimatedNumber
+            value={displayTotal / 1000}
+            decimals={0}
+            format={(n) => formatUsd(Math.round(n), { thousands: true, style: 'compact' })}
+          />
         </div>
         <div className="text-[11px] text-white/65">{t('modules.inventory.pages.opp.filledNote')}</div>
 

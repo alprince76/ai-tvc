@@ -1,16 +1,29 @@
 import { AtSign, Paperclip, SendHorizontal, Sparkles } from 'lucide-react'
+import { useMemo } from 'react'
 import { AvatarStack } from '../../ui/AvatarStack'
 import { collabComments } from '../../../lib/mock/approval'
+import { useLocale } from '../../../i18n/LocaleContext'
 import { cn } from '../../../lib/cn'
 
-const lineItems = [
-  ['Metro One · Prime', '8 spots · $31.8 CPM', '$102,200'],
-  ['Sport+ · Live', '4 spots · $34.2 CPM', '$84,400'],
-  ['Nusantara TV', '4 spots · $28.6 CPM', '$62,500'],
-  ['News 24 · Bulletin', '2 spots · $22.4 CPM', '$28,900'],
+const lineSpecs = [
+  { channelLine: 'Metro One · Prime', spots: 8, cpmUsd: 31.8, totalUsd: 102_200 },
+  { channelLine: 'Sport+ · Live', spots: 4, cpmUsd: 34.2, totalUsd: 84_400 },
+  { channelLine: 'Nusantara TV', spots: 4, cpmUsd: 28.6, totalUsd: 62_500 },
+  { channelLine: 'News 24 · Bulletin', spots: 2, cpmUsd: 22.4, totalUsd: 28_900 },
 ]
 
 export function CollaborationWorkspace() {
+  const { formatUsd, formatCpmUsd } = useLocale()
+
+  const renderedLines = useMemo(
+    () =>
+      lineSpecs.map((row) => {
+        const detail = `${row.spots} spots · ${formatCpmUsd(row.cpmUsd)} CPM`
+        return [row.channelLine, detail, formatUsd(row.totalUsd)] as const
+      }),
+    [formatCpmUsd, formatUsd],
+  )
+
   return (
     <div className="grid lg:grid-cols-[1.4fr_340px] gap-5">
       <div className="rounded-2xl bg-white border border-slate-200/70 shadow-[0_24px_60px_-30px_rgba(15,23,42,0.25)] overflow-hidden">
@@ -32,7 +45,7 @@ export function CollaborationWorkspace() {
             <span>Detail</span>
             <span className="text-right">Total</span>
           </div>
-          {lineItems.map((l, i) => (
+          {renderedLines.map((l, i) => (
             <div
               key={i}
               className="grid grid-cols-3 py-3 text-[12px] border-b border-slate-100 last:border-b-0"

@@ -199,7 +199,7 @@ export const id = {
           volumeDisc: 'Diskon volume',
           aiSuggestion: 'Saran AI',
           suggestionBody:
-            'Menambah share-of-voice dari 22% ke 26% menambah pendapatan +$32k dengan dampak CPM marjinal (-1,2%).',
+            'Menambah share-of-voice dari 22% ke 26% menambah pendapatan {impact} dengan dampak CPM marjinal (-1,2%).',
           autoApply: 'Terapkan otomatis?',
           totalRevenue: 'Total pendapatan',
           grp: 'GRP',
@@ -219,7 +219,7 @@ export const id = {
           total: 'Total',
           aiSummary: 'Ringkasan AI:',
           aiSummaryBody:
-            'jangkauan proyeksi 12,4M (A25-44), GRP 248, CPM rata-rata $24,80. Prakiraan +18% jangkauan inkremental vs. kampanye Aurora sebelumnya.',
+            'jangkauan proyeksi 12,4M (A25-44), GRP 248, CPM rata-rata {avgCpm}. Prakiraan +18% jangkauan inkremental vs. kampanye Aurora sebelumnya.',
           approval: 'Ruting persetujuan',
           approvalChain: 'Rantai persetujuan',
           saveScenario: 'Simpan skenario',
@@ -265,13 +265,17 @@ export const id = {
           legendConfidence: 'Kepercayaan',
           aiInsight: 'Wawasan AI',
           aiInsightBody:
-            'Prime Sport+ undervalued sekitar 14% vs permintaan saat ini. Kenaikan bertahap +12% dalam 7 hari memproyeksikan +$72k dengan risiko sold out di bawah 8%.',
+            'Prime Sport+ undervalued sekitar 14% vs permintaan saat ini. Kenaikan bertahap +12% dalam 7 hari memproyeksikan {impact} dengan risiko sold out di bawah 8%.',
           topChannels: 'Kanal teratas',
           cpm7d: 'CPM · 7h',
           kpiAvgCpm: 'CPM rata-rata',
           kpiDemand: 'Indeks permintaan',
           kpiOccupancy: 'Okupansi',
           kpiRevenueLift: 'Angkat pendapatan',
+        },
+        heatmap: {
+          aiNudge:
+            'Naikkan prime CPM +5% untuk Kamis depan — memproyeksikan {gain} dengan kepercayaan 92%.',
         },
       },
     },
@@ -330,7 +334,7 @@ export const id = {
       pages: {
         opp: {
           title: 'Peringkat peluang pendapatan',
-          openSlotsSummary: '{count} slot terbuka · ${k}k dapat dialokasikan',
+          openSlotsSummary: '{count} slot terbuka · {amount} dapat dialokasikan',
           autoPackageAll: 'Paketkan otomatis semua',
           projectedRevLabel: 'pendapatan proyeksi',
           addressable: 'Pendapatan terjangkau',
@@ -360,6 +364,46 @@ export const id = {
         suggest: 'Saran Alur Kerja',
         feed: 'Aktivitas',
         auto: 'Konsol Otomatisasi',
+      },
+      workspace: {
+        newSession: 'Sesi baru',
+        recent: 'Terbaru',
+        liveBadge: 'Langsung',
+        sessionTitle: 'Quotation Aurora Mobility',
+        sessionSub: 'Ruang Kerja AI · gpt-tvc · v2.1',
+        typingLabel: 'AI sedang menyusun…',
+        composerPlaceholder:
+          'Tanya Ruang Kerja AI — penawaran, harga, persetujuan…',
+        send: 'Kirim pesan',
+        suggestionChips: [
+          'Auto-quote 3 pengiklan di pipeline',
+          'Re-harga prime time 7 hari ke depan',
+          'Cari inventori berisiko tidak terjual',
+          'Ringkas kinerja kampanye minggu lalu',
+        ],
+        chatFallbackReply:
+          'Permintaan sudah dicatat. Mengarahkan ke pengambilan data — coba kartu quotation Prime Reach atau ulangi dengan KPI lebih spesifik.',
+        referencedSourcesHeading: 'Sumber referensi',
+        referencedSourcesList: [
+          'Inventori · 4–26 Jun',
+          'Model harga v2.1',
+          'Aurora · 6 kampanye terakhir',
+          'Ketersediaan Sport+',
+          'Graf persetujuan · Mira C.',
+        ],
+        runWorkflow: 'Jalankan alur kerja',
+        openQuote: 'Buka',
+        modalTitle: 'Pratinjau quotation (simulasi)',
+        modalSubtitle: 'Ringkasan paket',
+        modalClose: 'Tutup',
+        modalExport: 'Ekspor PDF (simulasi)',
+        modalColChannel: 'Kanal',
+        modalColDaypart: 'Daypart',
+        modalColSpotsCpm: 'Spot / CPM',
+        modalColTotal: 'Total',
+        modalTotalsRowBrief: 'Plafon brief',
+        modalTotalsRowPackage: 'Total paket',
+        modalFitBadge: '{{pct}}% cocok',
       },
       pages: {
         workflow: {
@@ -403,6 +447,15 @@ export const id = {
           kindOpportunity: 'Peluang',
           kindAnomaly: 'Anomali',
           kindRisk: 'Risiko',
+        },
+        revenue: {
+          last30Scaled: '30 hari terakhir · dalam ribuan terskala (lokal)',
+          byChannel: 'Pendapatan per kanal',
+          byDaypart: 'Pendapatan per daypart',
+        },
+        exec: {
+          narrative:
+            'Mei 2026 membawa bulan pendapatan terkuat sejak peluncuran platform. Perutean AI harga pada Sport+ dan Metro One menghasilkan {incr} pendapatan inkremental dengan risiko habis terjual di bawah 8%. Peluncuran EV Aurora menjadi kampanye paling cocok dalam catatan (94%), memvalidasi alur penawaran AI baru untuk vertikal otomotif. Sarankan meningkatkan jendela live Sport+ di Q3 dengan cadangan inventori {hold} untuk pengiklan premium.',
         },
       },
     },

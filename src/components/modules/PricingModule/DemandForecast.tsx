@@ -1,6 +1,7 @@
-import { useId, useState } from 'react'
+import { useMemo, useId, useState } from 'react'
 import { cn } from '../../../lib/cn'
 import { demandLabels, demandSeries } from '../../../lib/mock/pricing'
+import { useLocale } from '../../../i18n/LocaleContext'
 
 const scenarios: { id: keyof typeof demandSeries; label: string; color: string }[] = [
   { id: 'baseline', label: 'Baseline', color: '#6366f1' },
@@ -12,6 +13,10 @@ export function DemandForecast() {
   const [active, setActive] = useState<keyof typeof demandSeries>('bullish')
   const data = demandSeries[active]
   const color = scenarios.find((s) => s.id === active)?.color ?? '#6366f1'
+
+  const { formatUsd } = useLocale()
+
+  const projectedRev = useMemo(() => formatUsd(1.42, { millions: true, style: 'compact' }), [formatUsd])
 
   return (
     <div className="grid lg:grid-cols-[1fr_280px] gap-5">
@@ -52,7 +57,7 @@ export function DemandForecast() {
           <ForecastStat label="Peak demand index" value={String(Math.max(...data))} hint="Jul 18 · Sport+ tournament" />
           <ForecastStat label="Volatility" value="±6.4%" hint="Std. dev. last 30d" />
           <ForecastStat label="AI confidence" value="89%" hint="Higher than 30d avg" />
-          <ForecastStat label="Projected revenue" value="$1.42M" hint="At current pricing" />
+          <ForecastStat label="Projected revenue" value={projectedRev} hint="At current pricing" />
         </ul>
 
         <button className="mt-5 w-full rounded-xl bg-white text-[#0a1b33] text-[11px] font-semibold py-2.5 hover:bg-cyan-100 transition-colors">

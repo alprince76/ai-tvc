@@ -1,8 +1,11 @@
 import type { Status } from '../../components/ui/StatusBadge'
+import type { TString } from '../../i18n/types'
+
+export type ApprovalSubject = string | { template: TString; moneyUsdThousands: number }
 
 export interface ApprovalItem {
   id: string
-  subject: string
+  subject: ApprovalSubject
   type: 'Quotation' | 'TVC' | 'Pricing' | 'Schedule' | 'Contract'
   requester: string
   team: string
@@ -15,7 +18,13 @@ export interface ApprovalItem {
 export const approvalQueue: ApprovalItem[] = [
   {
     id: 'q1',
-    subject: 'Aurora Mobility · $355k EV launch',
+    subject: {
+      template: {
+        en: 'Aurora Mobility · {amount} EV launch',
+        id: 'Aurora Mobility · {amount} peluncuran EV',
+      },
+      moneyUsdThousands: 355,
+    },
     type: 'Quotation',
     requester: 'Mira C.',
     team: 'Sales · Auto vertical',

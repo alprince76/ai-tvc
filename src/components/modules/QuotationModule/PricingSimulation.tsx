@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useLocale } from '../../../i18n/LocaleContext'
 import { revenueSeries, weekLabels } from '../../../lib/mock/quotation'
 import { KpiCard } from '../../ui/KpiCard'
@@ -5,7 +6,18 @@ import { MiniBarChart } from '../../ui/MiniBarChart'
 import { SimulationButton } from '../../ui/SimulationButton'
 
 export function PricingSimulation() {
-  const { t } = useLocale()
+  const { t, formatUsd, formatCpmUsd } = useLocale()
+
+  const suggestion = useMemo(() => {
+    const impact = '+' + formatUsd(32, { thousands: true, style: 'compact' })
+    return (
+      t('modules.quotation.pages.pricing.suggestionBody').replace('{impact}', impact) +
+      ' ' +
+      t('modules.quotation.pages.pricing.autoApply')
+    )
+  }, [formatUsd, t])
+
+  const baseCpmLabel = formatCpmUsd(24.8, { style: 'standard', maxFractionDigits: 2, minFractionDigits: 2 })
 
   return (
     <div className="grid lg:grid-cols-[1fr_1.3fr] gap-5">
@@ -14,7 +26,13 @@ export function PricingSimulation() {
         <p className="text-[12px] text-slate-500 mt-0.5">{t('modules.quotation.pages.pricing.sub')}</p>
 
         <div className="mt-6 space-y-5">
-          <Lever label={t('modules.quotation.pages.pricing.baseCpm')} valueLabel="$24.80" min={10} max={50} value={24.8} />
+          <Lever
+            label={t('modules.quotation.pages.pricing.baseCpm')}
+            valueLabel={baseCpmLabel}
+            min={10}
+            max={50}
+            value={24.8}
+          />
           <Lever label={t('modules.quotation.pages.pricing.frequency')} valueLabel="3.4 OTS" min={1} max={8} value={3.4} />
           <Lever label={t('modules.quotation.pages.pricing.shareVoice')} valueLabel="22%" min={5} max={50} value={22} unit="%" />
           <Lever label={t('modules.quotation.pages.pricing.volumeDisc')} valueLabel="6%" min={0} max={20} value={6} unit="%" />
@@ -24,9 +42,7 @@ export function PricingSimulation() {
           <div className="text-[10px] uppercase tracking-[0.14em] text-slate-500 font-semibold">
             {t('modules.quotation.pages.pricing.aiSuggestion')}
           </div>
-          <p className="text-[12px] text-[#0a1b33] mt-1.5 leading-snug">
-            {t('modules.quotation.pages.pricing.suggestionBody')} {t('modules.quotation.pages.pricing.autoApply')}
-          </p>
+          <p className="text-[12px] text-[#0a1b33] mt-1.5 leading-snug">{suggestion}</p>
           <div className="mt-3 flex gap-2 flex-wrap">
             <SimulationButton
               label={t('action.applySuggestion')}
@@ -54,8 +70,16 @@ export function PricingSimulation() {
 
       <div className="space-y-5">
         <div className="grid grid-cols-3 gap-3">
-          <KpiCard label={t('modules.quotation.pages.pricing.totalRevenue')} value="$340.5k" delta={6.4} />
-          <KpiCard label={t('modules.quotation.pages.input.avgCpmLabel')} value="$24.80" delta={-1.2} />
+          <KpiCard
+            label={t('modules.quotation.pages.pricing.totalRevenue')}
+            value={formatUsd(340.5, { thousands: true, style: 'compact' })}
+            delta={6.4}
+          />
+          <KpiCard
+            label={t('modules.quotation.pages.input.avgCpmLabel')}
+            value={formatCpmUsd(24.8, { style: 'standard', maxFractionDigits: 2, minFractionDigits: 2 })}
+            delta={-1.2}
+          />
           <KpiCard label={t('modules.quotation.pages.pricing.grp')} value="248" delta={4.4} />
         </div>
 

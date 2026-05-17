@@ -12,7 +12,7 @@ function delay(ms: number) {
 }
 
 export function CampaignInput() {
-  const { t, tArray } = useLocale()
+  const { t, tArray, formatUsd, formatCpmUsd } = useLocale()
   const kpis = tArray('modules.quotation.pages.input.kpiChips')
   const demos = tArray('modules.quotation.pages.input.demoChips')
 
@@ -115,7 +115,7 @@ export function CampaignInput() {
               className="flex-1 accent-[#0a152d]"
             />
             <span className="font-display text-[14px] font-medium text-[#0a1b33] tabular-nums w-20 text-right">
-              $320k
+              {formatUsd(320, { thousands: true, style: 'compact' })}
             </span>
           </div>
         </div>
@@ -145,7 +145,7 @@ export function CampaignInput() {
         <div className="mt-6 grid grid-cols-2 gap-3">
           <Metric label={t('modules.quotation.pages.input.matchingSlots')} value="1,284" />
           <Metric label={t('modules.quotation.pages.input.channelsLabel')} value="6" />
-          <Metric label={t('modules.quotation.pages.input.avgCpmLabel')} value="$24.20" />
+          <Metric label={t('modules.quotation.pages.input.avgCpmLabel')} value={formatCpmUsd(24.2)} />
           <Metric label={t('modules.quotation.pages.input.projectedReach')} value="12.4M" />
         </div>
 

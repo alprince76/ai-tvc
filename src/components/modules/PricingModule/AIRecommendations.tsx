@@ -1,4 +1,6 @@
 import { Check, Minus, X } from 'lucide-react'
+import { useMemo } from 'react'
+import { useLocale } from '../../../i18n/LocaleContext'
 import { recommendations, type PricingRecommendation } from '../../../lib/mock/pricing'
 import { cn } from '../../../lib/cn'
 
@@ -9,6 +11,21 @@ const actionMap: Record<PricingRecommendation['action'], { bg: string; text: str
 }
 
 export function AIRecommendations() {
+  const { formatUsd, tr } = useLocale()
+
+  const formatImpact = useMemo(
+    () => (r: PricingRecommendation) => {
+      if (r.impactText) return tr(r.impactText)
+      const w = r.impactUsdWeeklyThousands
+      if (w === undefined) return ''
+      const money = '+' + formatUsd(w, { thousands: true, style: 'compact' })
+      const wl = r.impactWeeklyLabel ? tr(r.impactWeeklyLabel) : ''
+      const extra = r.impactSecondary ? tr(r.impactSecondary) : ''
+      return wl ? `${money} ${wl}${extra ? ` · ${extra}` : ''}` : money + (extra ? ` · ${extra}` : '')
+    },
+    [formatUsd, tr],
+  )
+
   return (
     <div className="rounded-2xl bg-white/85 backdrop-blur-2xl border border-slate-200/60 p-6 shadow-[0_18px_40px_-22px_rgba(15,23,42,0.18)]">
       <div className="flex items-center justify-between">
@@ -48,7 +65,7 @@ export function AIRecommendations() {
                   <span className="text-[11.5px] text-slate-500">{r.daypart}</span>
                 </div>
                 <p className="text-[12px] text-slate-600 mt-1 leading-snug">{r.reason}</p>
-                <div className="mt-1.5 text-[11px] text-emerald-700 font-semibold">{r.impact}</div>
+                <div className="mt-1.5 text-[11px] text-emerald-700 font-semibold">{formatImpact(r)}</div>
               </div>
 
               <div className="flex items-center gap-2 justify-end">

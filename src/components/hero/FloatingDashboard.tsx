@@ -115,7 +115,7 @@ function InventoryHeatmap() {
 }
 
 function QuotationGenerator() {
-  const { t } = useLocale()
+  const { t, formatUsd } = useLocale()
   return (
     <div className="bg-white/85 backdrop-blur-2xl border border-white/60 p-4 w-[250px]">
       <div className="flex items-center justify-between">
@@ -137,7 +137,7 @@ function QuotationGenerator() {
         <div>
           <div className="text-[10px] text-[#0a1b33]/55">{t('floating.projectedRevenue')}</div>
           <div className="font-display text-[18px] font-medium text-[#0a1b33] tracking-tight leading-none mt-1">
-            $284,500
+            {formatUsd(284_500)}
           </div>
         </div>
         <div className="relative h-11 w-11">

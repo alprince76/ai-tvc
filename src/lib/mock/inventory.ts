@@ -20,7 +20,7 @@ export const inventoryKpis = [
   { label: 'Total Slots', value: '1,248', delta: 0, hint: 'this week' },
   { label: 'Sold', value: '74.2%', delta: 3.4, hint: '+92 vs. last' },
   { label: 'Available', value: '321', delta: -3.4, hint: 'across 5 channels' },
-  { label: 'Revenue at Risk', value: '$84k', delta: -8.1, hint: '14 slots, 9d window' },
+  { label: 'Revenue at Risk', riskUsdThousands: 84, delta: -8.1, hint: '14 slots, 9d window' },
 ]
 
 export interface OpenSlot {

@@ -1,9 +1,30 @@
-import { useId } from 'react'
+import { useCallback, useId } from 'react'
 import { Sparkles } from 'lucide-react'
-import { audienceMix, campaignKpis, insights, revenueAreaSeries, topCampaigns } from '../../../lib/mock/analytics'
+import {
+  audienceMix,
+  campaignKpis,
+  insights,
+  revenueAreaSeries,
+  topCampaigns,
+  type Insight,
+} from '../../../lib/mock/analytics'
+import { useLocale } from '../../../i18n/LocaleContext'
 import { KpiCard } from '../../ui/KpiCard'
 
 export function CampaignDashboard() {
+  const { formatUsd, formatCpmUsd, tr } = useLocale()
+
+  const formatInsightSnippet = useCallback(
+    (i: Insight) => {
+      if (i.actionTemplate && i.actionAmountUsdThousands !== undefined) {
+        const amt = formatUsd(i.actionAmountUsdThousands, { thousands: true, style: 'compact' })
+        return tr(i.actionTemplate).replace(/\{amount\}/g, amt)
+      }
+      return i.action ?? ''
+    },
+    [formatUsd, tr],
+  )
+
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -11,7 +32,7 @@ export function CampaignDashboard() {
           <KpiCard
             key={k.label}
             label={k.label}
-            value={k.value}
+            value={'cpmUsd' in k && k.cpmUsd !== undefined ? formatCpmUsd(k.cpmUsd) : (k.value as string)}
             unit={'unit' in k ? (k.unit as string) : undefined}
             delta={k.delta}
             sparkline={k.sparkline}
@@ -49,7 +70,7 @@ export function CampaignDashboard() {
               <li key={c.name} className="py-2.5 flex items-center justify-between">
                 <span className="text-[12px] text-[#0a1b33] font-semibold truncate pr-3">{c.name}</span>
                 <div className="flex items-center gap-3 text-[11px] tabular-nums">
-                  <span className="text-slate-500">${c.spend}k</span>
+                  <span className="text-slate-500">{formatUsd(c.spend, { thousands: true, style: 'compact' })}</span>
                   <span className="text-emerald-700 font-semibold">{c.roi}x</span>
                 </div>
               </li>
@@ -82,7 +103,7 @@ export function CampaignDashboard() {
             {insights.slice(0, 2).map((i) => (
               <li key={i.id} className="rounded-xl bg-white/5 border border-white/10 p-3">
                 <div className="text-[11.5px] font-semibold text-white">{i.title}</div>
-                <div className="text-[10.5px] text-white/65 mt-0.5 leading-snug">{i.action}</div>
+                <div className="text-[10.5px] text-white/65 mt-0.5 leading-snug">{formatInsightSnippet(i)}</div>
                 <div className="mt-1.5 text-[10px] text-cyan-300 font-semibold">{i.confidence}% conf.</div>
               </li>
             ))}

@@ -199,7 +199,7 @@ export const en = {
           volumeDisc: 'Volume discount',
           aiSuggestion: 'AI suggestion',
           suggestionBody:
-            'Increasing share-of-voice from 22% to 26% adds +$32k revenue with marginal CPM impact (-1.2%).',
+            'Increasing share-of-voice from 22% to 26% adds {impact} revenue with marginal CPM impact (-1.2%).',
           autoApply: 'Auto-apply?',
           totalRevenue: 'Total revenue',
           grp: 'GRP',
@@ -219,7 +219,7 @@ export const en = {
           total: 'Total',
           aiSummary: 'AI summary:',
           aiSummaryBody:
-            'projected reach 12.4M (A25-44), GRP 248, avg CPM $24.80. Forecast +18% incremental reach vs. last Aurora campaign.',
+            'projected reach 12.4M (A25-44), GRP 248, avg CPM {avgCpm}. Forecast +18% incremental reach vs. last Aurora campaign.',
           approval: 'Approval routing',
           approvalChain: 'Approval chain',
           saveScenario: 'Save scenario',
@@ -265,13 +265,16 @@ export const en = {
           legendConfidence: 'Confidence',
           aiInsight: 'AI insight',
           aiInsightBody:
-            'Sport+ prime is under-priced by an estimated 14% relative to current demand. A staged +12% uplift over 7 days projects +$72k with sellout risk under 8%.',
+            'Sport+ prime is under-priced by an estimated 14% relative to current demand. A staged +12% uplift over 7 days projects {impact} with sellout risk under 8%.',
           topChannels: 'Top channels',
           cpm7d: 'CPM · 7d',
           kpiAvgCpm: 'Avg CPM',
           kpiDemand: 'Demand Index',
           kpiOccupancy: 'Occupancy',
           kpiRevenueLift: 'Revenue Lift',
+        },
+        heatmap: {
+          aiNudge: 'Raise prime CPM +5% for next Thu — projects {gain} with 92% confidence.',
         },
       },
     },
@@ -323,7 +326,7 @@ export const en = {
       pages: {
         opp: {
           title: 'Revenue opportunity ranked',
-          openSlotsSummary: '{count} open slots · ${k}k addressable',
+          openSlotsSummary: '{count} open slots · {amount} addressable',
           autoPackageAll: 'Auto-package all',
           projectedRevLabel: 'projected revenue',
           addressable: 'Addressable revenue',
@@ -353,6 +356,46 @@ export const en = {
         suggest: 'Workflow Suggestions',
         feed: 'Activity Feed',
         auto: 'Automation Console',
+      },
+      workspace: {
+        newSession: 'New session',
+        recent: 'Recent',
+        liveBadge: 'Live',
+        sessionTitle: 'Aurora Mobility quotation',
+        sessionSub: 'AI Workspace · gpt-tvc · v2.1',
+        typingLabel: 'AI is drafting…',
+        composerPlaceholder:
+          'Ask AI Workspace anything — quotations, pricing, approvals…',
+        send: 'Send message',
+        suggestionChips: [
+          'Auto-quote 3 advertisers in pipeline',
+          'Re-price prime time next 7 days',
+          'Find inventory at risk of going unsold',
+          'Summarize last week campaign performance',
+        ],
+        chatFallbackReply:
+          "I've logged that prompt. Routing to retrieval — try the Prime Reach quotation card or rerun with a sharper KPI.",
+        referencedSourcesHeading: 'Referenced sources',
+        referencedSourcesList: [
+          'Inventory · Jun 4–26',
+          'Pricing model v2.1',
+          'Aurora past 6 campaigns',
+          'Sport+ avails',
+          'Approval graph · Mira C.',
+        ],
+        runWorkflow: 'Run workflow',
+        openQuote: 'Open',
+        modalTitle: 'Quotation preview (simulated)',
+        modalSubtitle: 'Package summary',
+        modalClose: 'Close',
+        modalExport: 'Export PDF (simulated)',
+        modalColChannel: 'Channel',
+        modalColDaypart: 'Daypart',
+        modalColSpotsCpm: 'Spots / CPM',
+        modalColTotal: 'Total',
+        modalTotalsRowBrief: 'Brief cap',
+        modalTotalsRowPackage: 'Package total',
+        modalFitBadge: '{{pct}}% fit',
       },
       pages: {
         workflow: {
@@ -396,6 +439,15 @@ export const en = {
           kindOpportunity: 'Opportunity',
           kindAnomaly: 'Anomaly',
           kindRisk: 'Risk',
+        },
+        revenue: {
+          last30Scaled: 'Last 30 days · values in scaled thousands (localized)',
+          byChannel: 'Revenue by channel',
+          byDaypart: 'Revenue by daypart',
+        },
+        exec: {
+          narrative:
+            'May 2026 delivered the strongest revenue month since platform launch. AI-routed pricing on Sport+ and Metro One drove {incr} incremental revenue with sellout risk held below 8%. The Aurora EV launch became the highest-fit campaign on record (94%), validating the new AI quotation flow for the automotive vertical. Recommend doubling down on Sport+ live windows for Q3 with a {hold} inventory hold for premium advertisers.',
         },
       },
     },

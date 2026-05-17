@@ -1,7 +1,16 @@
+import { useMemo } from 'react'
 import { DonutGauge } from '../../ui/DonutGauge'
 import { KpiCard } from '../../ui/KpiCard'
+import { useLocale } from '../../../i18n/LocaleContext'
 
 export function RevenueSimulator() {
+  const { formatUsd } = useLocale()
+
+  const projectedGain = useMemo(
+    () => formatUsd(218, { thousands: true, style: 'compact' }),
+    [formatUsd],
+  )
+
   return (
     <div className="grid lg:grid-cols-[1fr_1fr_280px] gap-5">
       <div className="rounded-2xl bg-white/85 backdrop-blur-2xl border border-slate-200/60 p-6 shadow-[0_18px_40px_-22px_rgba(15,23,42,0.18)]">
@@ -17,8 +26,8 @@ export function RevenueSimulator() {
       </div>
 
       <div className="grid grid-cols-2 gap-3 content-start">
-        <KpiCard label="Revenue baseline" value="$1.20M" delta={0} hint="this period" />
-        <KpiCard label="Optimized" value="$1.42M" delta={18.4} variant="dark" />
+        <KpiCard label="Revenue baseline" value={formatUsd(1.2, { millions: true, style: 'compact' })} delta={0} hint="this period" />
+        <KpiCard label="Optimized" value={formatUsd(1.42, { millions: true, style: 'compact' })} delta={18.4} variant="dark" />
         <KpiCard label="Margin uplift" value="+ 3.6 pp" delta={14.1} />
         <KpiCard label="Sellout risk" value="6.2%" delta={-3.4} />
       </div>
@@ -28,7 +37,7 @@ export function RevenueSimulator() {
           Projected gain
         </div>
         <DonutGauge value={88} size={120} thickness={10} variant="cyan" />
-        <div className="font-display text-[26px] font-medium mt-3 tabular-nums">$218k</div>
+        <div className="font-display text-[26px] font-medium mt-3 tabular-nums">{projectedGain}</div>
         <div className="text-[11px] text-white/65">incremental over baseline · 30 days</div>
         <button className="mt-5 w-full rounded-xl bg-white text-[#0a1b33] text-[11px] font-semibold py-2.5 hover:bg-cyan-100 transition-colors">
           Save scenario

@@ -1,8 +1,20 @@
+import { useMemo } from 'react'
 import { Calendar, Download, Mail, PenLine, Sparkles } from 'lucide-react'
+import { useLocale } from '../../../i18n/LocaleContext'
 import { MiniBarChart } from '../../ui/MiniBarChart'
 import { revenueAreaSeries } from '../../../lib/mock/analytics'
 
 export function ExecutiveSummary() {
+  const { t, formatUsd } = useLocale()
+
+  const heroRevenue = useMemo(() => formatUsd(4.42, { millions: true, style: 'compact' }), [formatUsd])
+
+  const narrativeFull = useMemo(() => {
+    const incr = '+' + formatUsd(420, { thousands: true, style: 'compact' })
+    const hold = '+' + formatUsd(180, { thousands: true, style: 'compact' })
+    return t('modules.analytics.pages.exec.narrative').replace('{incr}', incr).replace('{hold}', hold)
+  }, [formatUsd, t])
+
   return (
     <div className="rounded-2xl bg-white border border-slate-200/70 shadow-[0_24px_60px_-30px_rgba(15,23,42,0.25)] overflow-hidden">
       <div className="px-8 pt-8 pb-5 border-b border-slate-100 flex items-start justify-between">
@@ -34,9 +46,7 @@ export function ExecutiveSummary() {
             <div className="text-[10px] uppercase tracking-[0.18em] font-semibold opacity-80">
               Revenue this month
             </div>
-            <div className="font-display text-[44px] font-medium leading-none mt-1.5 tabular-nums">
-              $4.42M
-            </div>
+            <div className="font-display text-[44px] font-medium leading-none mt-1.5 tabular-nums">{heroRevenue}</div>
             <div className="text-[12px] opacity-85 mt-1">+18.4% vs. last month</div>
           </div>
 
@@ -46,13 +56,7 @@ export function ExecutiveSummary() {
             <SecondaryKpi label="Avg ROI" value="4.6x" delta="+12.8%" />
           </div>
 
-          <p className="mt-6 text-[12.5px] text-[#0a1b33] leading-relaxed">
-            May 2026 delivered the strongest revenue month since platform launch. AI-routed pricing on Sport+
-            and Metro One drove +$420k incremental revenue with sellout risk held below 8%. The Aurora EV
-            launch became the highest-fit campaign on record (94%), validating the new AI quotation flow
-            for the automotive vertical. Recommend doubling down on Sport+ live windows for Q3 with a
-            +$180k inventory hold for premium advertisers.
-          </p>
+          <p className="mt-6 text-[12.5px] text-[#0a1b33] leading-relaxed">{narrativeFull}</p>
         </div>
 
         <div>

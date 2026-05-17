@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Check, Clock, Sparkles } from 'lucide-react'
 import { useLocale } from '../../../i18n/LocaleContext'
 import { SimulationButton } from '../../ui/SimulationButton'
@@ -22,7 +23,14 @@ const approvalSteps = [
 ]
 
 export function QuotePreview() {
-  const { t } = useLocale()
+  const { t, formatUsd, formatCpmUsd } = useLocale()
+
+  const avgCpmText = formatCpmUsd(24.8, { style: 'standard', maxFractionDigits: 2, minFractionDigits: 2 })
+
+  const aiSummaryBodyFull = useMemo(
+    () => t('modules.quotation.pages.preview.aiSummaryBody').replace('{avgCpm}', avgCpmText),
+    [avgCpmText, t],
+  )
 
   return (
     <div className="grid lg:grid-cols-[1fr_320px] gap-5">
@@ -63,25 +71,25 @@ export function QuotePreview() {
               <span className="font-semibold text-[#0a1b33]">{l.ch}</span>
               <span className="text-slate-500">{l.daypart}</span>
               <span className="text-right text-[#0a1b33]">
-                {l.spots} · ${l.cpm}
+                {l.spots} · {formatCpmUsd(l.cpm)}
               </span>
               <span className="text-right font-semibold text-[#0a1b33] tabular-nums">
-                ${l.total.toLocaleString()}
+                {formatUsd(l.total)}
               </span>
             </div>
           ))}
 
           <div className="mt-4 ml-auto w-64 text-[12px] space-y-1.5">
-            <Row label={t('modules.quotation.pages.preview.subtotal')} value={`$${subtotal.toLocaleString()}`} />
-            <Row label={t('modules.quotation.pages.preview.prodTraffic')} value={`$${fees.toLocaleString()}`} />
+            <Row label={t('modules.quotation.pages.preview.subtotal')} value={formatUsd(subtotal)} />
+            <Row label={t('modules.quotation.pages.preview.prodTraffic')} value={formatUsd(fees)} />
             <div className="h-px bg-slate-200 my-1" />
-            <Row label={t('modules.quotation.pages.preview.total')} value={`$${total.toLocaleString()}`} highlight />
+            <Row label={t('modules.quotation.pages.preview.total')} value={formatUsd(total)} highlight />
           </div>
 
           <div className="mt-6 rounded-xl bg-slate-50 border border-slate-200/80 p-4 flex items-start gap-3">
             <Sparkles size={14} className="text-violet-500 mt-0.5 shrink-0" />
             <p className="text-[11.5px] text-[#0a1b33] leading-snug">
-              <b>{t('modules.quotation.pages.preview.aiSummary')}</b> {t('modules.quotation.pages.preview.aiSummaryBody')}
+              <b>{t('modules.quotation.pages.preview.aiSummary')}</b> {aiSummaryBodyFull}
             </p>
           </div>
         </div>

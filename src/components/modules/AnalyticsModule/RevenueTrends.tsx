@@ -1,19 +1,28 @@
 import { MiniBarChart } from '../../ui/MiniBarChart'
-import { revenueByChannel, revenueByChannelLabels, revenueByDaypart, revenueByDaypartLabels } from '../../../lib/mock/analytics'
+import {
+  revenueByChannel,
+  revenueByChannelLabels,
+  revenueByDaypart,
+  revenueByDaypartLabels,
+} from '../../../lib/mock/analytics'
+import { useLocale } from '../../../i18n/LocaleContext'
 
 export function RevenueTrends() {
+  const { t } = useLocale()
+  const sub = t('modules.analytics.pages.revenue.last30Scaled')
+
   return (
     <div className="grid lg:grid-cols-2 gap-5">
       <ChartCard
-        title="Revenue by channel"
-        subtitle="Last 30 days · in $k"
+        title={t('modules.analytics.pages.revenue.byChannel')}
+        subtitle={sub}
         data={revenueByChannel}
         labels={revenueByChannelLabels}
         delta="+14.2%"
       />
       <ChartCard
-        title="Revenue by daypart"
-        subtitle="Last 30 days · in $k"
+        title={t('modules.analytics.pages.revenue.byDaypart')}
+        subtitle={sub}
         data={revenueByDaypart}
         labels={revenueByDaypartLabels.map((l) => `${l}h`)}
         delta="+8.6%"

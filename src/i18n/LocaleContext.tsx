@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react'
 import type { Locale, TString } from './types'
+import { formatMoney, type FormatMoneyOptions } from '../lib/money'
 import { en } from './en'
 import { id } from './id'
 import { isTString } from './types'
@@ -29,6 +30,9 @@ interface LocaleContextValue {
   t: (path: string, fallback?: string) => string
   tArray: (path: string) => string[]
   tr: (v: string | TString) => string
+  /** Monetary amounts modeled in USD → display USD (en) or IDR (id) via demo FX */
+  formatUsd: (amountUsd: number, options?: FormatMoneyOptions) => string
+  formatCpmUsd: (cpmUsd: number, options?: Omit<FormatMoneyOptions, 'perMille'>) => string
 }
 
 const LocaleContext = createContext<LocaleContextValue | null>(null)
@@ -99,9 +103,20 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     [locale],
   )
 
+  const formatUsd = useCallback(
+    (amountUsd: number, options?: FormatMoneyOptions) => formatMoney(locale, amountUsd, options ?? {}),
+    [locale],
+  )
+
+  const formatCpmUsd = useCallback(
+    (cpmUsd: number, options?: Omit<FormatMoneyOptions, 'perMille'>) =>
+      formatMoney(locale, cpmUsd, { ...options, perMille: true }),
+    [locale],
+  )
+
   const value = useMemo(
-    () => ({ locale, setLocale, t, tArray, tr }),
-    [locale, setLocale, t, tArray, tr],
+    () => ({ locale, setLocale, t, tArray, tr, formatUsd, formatCpmUsd }),
+    [locale, setLocale, t, tArray, tr, formatUsd, formatCpmUsd],
   )
 
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>

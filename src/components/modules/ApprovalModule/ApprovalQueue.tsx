@@ -1,7 +1,7 @@
 import { Check, Clock } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useLocale } from '../../../i18n/LocaleContext'
-import { approvalChain, approvalQueue } from '../../../lib/mock/approval'
+import { approvalChain, approvalQueue, type ApprovalSubject } from '../../../lib/mock/approval'
 import { cn } from '../../../lib/cn'
 import { SimulationButton } from '../../ui/SimulationButton'
 import { StatusBadge } from '../../ui/StatusBadge'
@@ -10,11 +10,20 @@ const FILTER_IDS = ['mine', 'team', 'overdue', 'all'] as const
 type FilterId = (typeof FILTER_IDS)[number]
 
 export function ApprovalQueue() {
-  const { t } = useLocale()
+  const { t, tr, formatUsd } = useLocale()
   const [active, setActive] = useState(approvalQueue[0].id)
   const [filter, setFilter] = useState<FilterId>('team')
   const selected = approvalQueue.find((q) => q.id === active) ?? approvalQueue[0]
   const chain = approvalChain[selected.id] ?? approvalChain.q1
+
+  const subjectText = useCallback(
+    (subject: ApprovalSubject) => {
+      if (typeof subject === 'string') return subject
+      const amt = formatUsd(subject.moneyUsdThousands, { thousands: true, style: 'compact' })
+      return tr(subject.template).replace(/\{amount\}/g, amt)
+    },
+    [formatUsd, tr],
+  )
 
   const filterLabel = useMemo(() => {
     const m: Record<FilterId, string> = {
@@ -83,7 +92,7 @@ export function ApprovalQueue() {
             >
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-[12.5px] font-semibold text-[#0a1b33]">{q.subject}</span>
+                  <span className="text-[12.5px] font-semibold text-[#0a1b33]">{subjectText(q.subject)}</span>
                   <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 rounded-full px-2 py-0.5">
                     {q.type}
                   </span>
@@ -106,7 +115,7 @@ export function ApprovalQueue() {
         <div className="text-[10px] uppercase tracking-[0.14em] text-white/60 font-semibold">
           {t('modules.approval.pages.queue.selectedChain')}
         </div>
-        <h4 className="font-display text-[14px] font-medium mt-2">{selected.subject}</h4>
+        <h4 className="font-display text-[14px] font-medium mt-2">{subjectText(selected.subject)}</h4>
 
         <ol className="mt-4 relative">
           <span className="absolute left-2.5 top-2 bottom-2 w-px bg-white/15" />

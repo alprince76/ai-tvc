@@ -1,7 +1,9 @@
+import type { TString } from '../../i18n/types'
+
 export const campaignKpis = [
   { label: 'Reach', value: '38.4M', unit: 'viewers', delta: 6.2, sparkline: [22, 26, 28, 30, 32, 34, 36, 38] },
   { label: 'GRP', value: '2,148', delta: 4.1, sparkline: [1600, 1700, 1800, 1900, 2000, 2050, 2100, 2148] },
-  { label: 'CPM', value: '$22.40', delta: -3.4, sparkline: [26, 25, 24, 24, 23, 23, 22, 22] },
+  { label: 'CPM', cpmUsd: 22.4, delta: -3.4, sparkline: [26, 25, 24, 24, 23, 23, 22, 22] },
   { label: 'ROI', value: '4.6x', delta: 12.8, sparkline: [3.2, 3.4, 3.8, 4.0, 4.2, 4.3, 4.5, 4.6] },
 ]
 
@@ -46,7 +48,10 @@ export interface Insight {
   kind: 'anomaly' | 'opportunity' | 'risk'
   title: string
   detail: string
-  action: string
+  /** Plain recommended action when actionTemplate is omitted */
+  action?: string
+  actionTemplate?: TString
+  actionAmountUsdThousands?: number
   confidence: number
 }
 
@@ -56,7 +61,11 @@ export const insights: Insight[] = [
     kind: 'opportunity',
     title: 'Sport+ over-indexes A25-34 by +28%',
     detail: 'Live tournament window correlates with brand-uplift study peaks',
-    action: 'Shift +$45k budget from Lifestyle to Sport+ live',
+    actionTemplate: {
+      en: 'Shift +{amount} budget from Lifestyle to Sport+ live',
+      id: 'Alihkan anggaran +{amount} dari Lifestyle ke Sport+ live',
+    },
+    actionAmountUsdThousands: 45,
     confidence: 94,
   },
   {

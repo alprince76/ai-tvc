@@ -2,6 +2,7 @@ import { AlertTriangle, Sparkles, TrendingUp } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useCallback, useState } from 'react'
 import { useLocale } from '../../../i18n/LocaleContext'
+import { USD_TO_IDR } from '../../../lib/money'
 import { insights, type Insight } from '../../../lib/mock/analytics'
 import { cn } from '../../../lib/cn'
 import { AnimatedNumber } from '../../ui/AnimatedNumber'
@@ -31,9 +32,25 @@ function InsightRow({
   applied: boolean
   onApply: () => void
 }) {
-  const { t } = useLocale()
+  const { t, formatUsd, tr } = useLocale()
   const k = kindMap[i.kind]
   const Icon = k.icon
+
+  /** Modeled nominal IDR uplift in mock → incremental USD shown via demo FX */
+  const appliedIncrementalUsd = 2_100_000 / USD_TO_IDR
+
+  const recommendedAction =
+    i.actionTemplate && i.actionAmountUsdThousands !== undefined
+      ? tr(i.actionTemplate).replace(
+          /\{amount\}/g,
+          formatUsd(i.actionAmountUsdThousands, { thousands: true, style: 'compact' }),
+        )
+      : (i.action ?? '')
+
+  const formatAppliedDelta = useCallback(
+    (n: number) => '+' + formatUsd(n, { style: 'compact' }),
+    [formatUsd],
+  )
 
   const kindLabels: Record<Insight['kind'], string> = {
     opportunity: t('modules.analytics.pages.insights.kindOpportunity'),
@@ -67,7 +84,7 @@ function InsightRow({
         <div className="mt-2 text-[11.5px] text-[#0a1b33] font-semibold inline-flex items-center gap-1.5 flex-wrap">
           <Sparkles size={11} className="text-violet-500" />
           {t('modules.analytics.pages.insights.recommended')}{' '}
-          <span className="text-slate-600 font-normal">{i.action}</span>
+          <span className="text-slate-600 font-normal">{recommendedAction}</span>
         </div>
         {applied && (
           <motion.div
@@ -77,7 +94,11 @@ function InsightRow({
           >
             <span className="rounded-full bg-emerald-500 text-white text-[9px] px-1.5 py-0.5">✓</span>
             {t('sim.insightApplied')} ·{' '}
-            <AnimatedNumber value={2100000} decimals={0} format={(n) => `+Rp ${(n / 1e6).toFixed(1)} M`} />
+            <AnimatedNumber
+              value={appliedIncrementalUsd}
+              decimals={1}
+              format={formatAppliedDelta}
+            />
           </motion.div>
         )}
       </div>

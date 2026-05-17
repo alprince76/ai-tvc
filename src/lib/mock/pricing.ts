@@ -1,10 +1,11 @@
 import type { HeatCell } from '../../components/ui/HeatmapGrid'
+import type { TString } from '../../i18n/types'
 
 export const pricingKpis = [
-  { label: 'Avg CPM', value: '$24.80', delta: 8.4, sparkline: [18, 19, 20, 22, 21, 23, 24, 25] },
+  { label: 'Avg CPM', value: '24.80', delta: 8.4, sparkline: [18, 19, 20, 22, 21, 23, 24, 25] },
   { label: 'Demand Index', value: '128', delta: 12.6, sparkline: [80, 90, 95, 100, 110, 120, 125, 128] },
   { label: 'Occupancy', value: '82.4%', delta: -2.1, sparkline: [88, 86, 85, 84, 83, 82, 82, 82] },
-  { label: 'Revenue Lift', value: '$1.42M', delta: 14.8, sparkline: [110, 130, 150, 170, 190, 210, 240, 280] },
+  { label: 'Revenue Lift', value: '1.42M', delta: 14.8, sparkline: [110, 130, 150, 170, 190, 210, 240, 280] },
 ]
 
 export const demandSeries = {
@@ -37,7 +38,12 @@ export interface PricingRecommendation {
   action: 'raise' | 'discount' | 'hold'
   delta: string
   reason: string
-  impact: string
+  /** Non-monetary line (e.g. Stable) */
+  impactText?: TString
+  impactUsdWeeklyThousands?: number
+  impactWeeklyLabel?: TString
+  /** Optional trailing note after money (e.g. clears N slots) */
+  impactSecondary?: TString
 }
 
 export const recommendations: PricingRecommendation[] = [
@@ -48,7 +54,8 @@ export const recommendations: PricingRecommendation[] = [
     action: 'raise',
     delta: '+8.5%',
     reason: 'Demand index spike, GRP outperforms forecast by 14%',
-    impact: '+$22.4k weekly',
+    impactUsdWeeklyThousands: 22.4,
+    impactWeeklyLabel: { en: 'weekly', id: 'per minggu' },
   },
   {
     id: 'r2',
@@ -57,7 +64,12 @@ export const recommendations: PricingRecommendation[] = [
     action: 'discount',
     delta: '-5.0%',
     reason: 'Inventory burn-down lagging, sellout risk in 11 days',
-    impact: '+$8.9k weekly · clears 18 slots',
+    impactUsdWeeklyThousands: 8.9,
+    impactWeeklyLabel: { en: 'weekly', id: 'per minggu' },
+    impactSecondary: {
+      en: 'clears 18 slots',
+      id: 'mengisi 18 slot',
+    },
   },
   {
     id: 'r3',
@@ -66,7 +78,8 @@ export const recommendations: PricingRecommendation[] = [
     action: 'raise',
     delta: '+12.0%',
     reason: 'Tournament window, top 3 advertisers competing',
-    impact: '+$41.2k weekly',
+    impactUsdWeeklyThousands: 41.2,
+    impactWeeklyLabel: { en: 'weekly', id: 'per minggu' },
   },
   {
     id: 'r4',
@@ -75,7 +88,7 @@ export const recommendations: PricingRecommendation[] = [
     action: 'hold',
     delta: '0.0%',
     reason: 'Pricing aligned with elasticity model, no signal',
-    impact: 'Stable',
+    impactText: { en: 'Stable', id: 'Stabil' },
   },
 ]
 

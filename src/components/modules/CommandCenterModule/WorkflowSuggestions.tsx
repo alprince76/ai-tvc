@@ -19,9 +19,19 @@ function delay(ms: number) {
 }
 
 function WorkflowCard({ w }: { w: WorkflowSuggestion }) {
-  const { t } = useLocale()
+  const { t, formatUsd, tr } = useLocale()
   const tag = tagMap[w.tag]
   const Icon = tag.icon
+
+  const impactLine = useMemo(() => {
+    if (w.impactText) return tr(w.impactText)
+    if (w.impactUsdThousands !== undefined && w.impactUsdThousands !== null) {
+      const prefix = '+' + formatUsd(w.impactUsdThousands, { thousands: true, style: 'compact' })
+      const suf = w.impactSuffix ? tr(w.impactSuffix) : ''
+      return suf ? `${prefix} ${suf}` : prefix
+    }
+    return ''
+  }, [formatUsd, tr, w.impactSuffix, w.impactText, w.impactUsdThousands])
 
   const [open, setOpen] = useState(false)
   const [done, setDone] = useState(false)
@@ -80,7 +90,7 @@ function WorkflowCard({ w }: { w: WorkflowSuggestion }) {
           <div className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-semibold">
             {t('modules.commandCenter.pages.workflow.impact')}
           </div>
-          <div className="text-[12.5px] font-semibold text-emerald-700">{w.impact}</div>
+          <div className="text-[12.5px] font-semibold text-emerald-700">{impactLine}</div>
         </div>
         <SimulationButton
           label={t('action.run')}
@@ -109,7 +119,7 @@ function WorkflowCard({ w }: { w: WorkflowSuggestion }) {
                   className="mt-3 inline-flex items-center gap-2 rounded-full bg-emerald-500/10 text-emerald-800 border border-emerald-500/20 px-2.5 py-1 text-[10px] font-semibold"
                 >
                   <CheckCircle2 size={12} />
-                  {t('modules.commandCenter.pages.workflow.badgeDone')} · {w.impact}
+                  {t('modules.commandCenter.pages.workflow.badgeDone')} · {impactLine}
                 </motion.div>
               )}
             </div>
